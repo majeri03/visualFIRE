@@ -2,6 +2,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFunctions } from "firebase/functions";
 
 // Konfigurasi Firebase Anda, diambil dari environment variables
 const firebaseConfig = {
@@ -19,3 +20,4 @@ const app = initializeApp(firebaseConfig);
 // Ekspor layanan yang akan kita gunakan di bagian lain aplikasi
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+export const functions = getFunctions(app);
