@@ -21,41 +21,39 @@ const DashboardPage = ({ user }) => {
   };
 
   const handleGeneratePresentation = async () => {
-  if (!inputText.trim()) {
-    alert("Tolong masukkan teks terlebih dahulu.");
-    return;
-  }
-  setIsLoading(true);
-
-  // Ganti URL ini dengan URL yang Anda dapatkan setelah deploy
-  const functionUrl = "URL_FUNCTION_ANDA_DARI_TERMINAL";
-
-  try {
-    const response = await fetch(functionUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: inputText }),
-    });
-
-    if (!response.ok) {
-      // Menangani error dari server
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Terjadi kesalahan pada server.');
+    if (!inputText.trim()) {
+      toast.error("Tolong masukkan teks terlebih dahulu.");
+      return;
     }
+    setIsLoading(true);
 
-    const responseData = await response.json();
-    console.log("Respon dari backend:", responseData);
-    alert(`Sukses! Backend merespon: "${responseData.message}"`);
+    try {
+      // Cukup panggil path relatif ini. Vercel akan otomatis mengarahkannya.
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: inputText }),
+      });
 
-  } catch (error) {
-    console.error("Error memanggil cloud function:", error);
-    alert(`Error: ${error.message}`);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        // Menangani error dari server dengan lebih baik
+        throw new Error(responseData.error || 'Terjadi kesalahan pada server.');
+      }
+
+      console.log("Respon dari Vercel:", responseData);
+      toast.success(`Sukses! Backend merespon: "${responseData.message}"`);
+
+    } catch (error) {
+      console.error("Error memanggil Vercel function:", error);
+      toast.error(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
