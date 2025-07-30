@@ -24,6 +24,8 @@ export default defineConfig([
     },
   rules: {
     'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    "react/prop-types": "off", // Menonaktifkan aturan prop-types untuk kesederhanaan
+    "react/react-in-jsx-scope": "off",
   },
   overrides: [
     {
